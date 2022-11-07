@@ -4,14 +4,18 @@ buildscript {
     }
     dependencies {
         classpath "io.realm:realm-gradle-plugin:10.11.1"
-    }
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20"    }
 }
 
 plugins {
     id 'com.android.application'
+//    id "org.jetbrains.kotlin.android.extensions" version "1.7.20"
+
 }
 
-apply plugin: "realm-android"
+//apply plugin: "org.jetbrains.kotlin.android.extensions"
+apply plugin: 'realm-android'
+
 
 android {
     compileSdk 32
@@ -25,7 +29,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled false

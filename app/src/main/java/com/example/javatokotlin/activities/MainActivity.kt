@@ -5,13 +5,13 @@ import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import android.os.Bundle
 import com.example.javatokotlin.R
+//import kotlinx.android.extensions.*
 import android.content.SharedPreferences
 import android.content.Intent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import com.example.javatokotlin.activities.DisplayActivity
-import com.example.javatokotlin.activities.MainActivity
 import com.example.javatokotlin.app.Constants
+import com.example.javatokotlin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var etName: EditText? = null
@@ -21,20 +21,23 @@ class MainActivity : AppCompatActivity() {
     private var inputLayoutName: TextInputLayout? = null
     private var inputLayoutRepoName: TextInputLayout? = null
     private var inputLayoutGithubUser: TextInputLayout? = null
-
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        etName = findViewById(R.id.etName)
-        etGithubRepoName = findViewById(R.id.etRepoName)
-        etLanguage = findViewById(R.id.etLanguage)
-        etGithubUser = findViewById(R.id.etGithubUser)
-        inputLayoutName = findViewById(R.id.inputLayoutName)
-        inputLayoutRepoName = findViewById(R.id.inputLayoutRepoName)
-        inputLayoutGithubUser = findViewById(R.id.inputLayoutGithubUser)
+        etName = binding.etName
+        etGithubRepoName = binding.etRepoName
+        etLanguage = binding.etLanguage
+        etGithubUser = binding.etGithubUser
+        inputLayoutName = binding.inputLayoutName
+        inputLayoutRepoName = binding.inputLayoutRepoName
+        inputLayoutGithubUser = binding.inputLayoutGithubUser
     }
+
     /** Save app username in SharedPreferences  */
     fun saveName(view: View?) {
         if (isNotEmpty(etName, inputLayoutName)) {
@@ -84,5 +87,4 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val TAG = MainActivity::class.java.simpleName
     }
-   
 }
