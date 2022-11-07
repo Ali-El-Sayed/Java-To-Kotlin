@@ -85,6 +85,7 @@ public class DisplayActivity extends AppCompatActivity implements NavigationView
         if (intent.getIntExtra(Constants.KEY_QUERY_TYPE, -1) == Constants.SEARCH_BY_REPO) {
             String queryRepo = intent.getStringExtra(Constants.KEY_REPO_SEARCH);
             String repoLanguage = intent.getStringExtra(Constants.KEY_LANGUAGE);
+            Log.d("DATAAPICALL", "onCreate: " + queryRepo + repoLanguage);
             fetchRepositories(queryRepo, repoLanguage);
         } else {
             String githubUser = intent.getStringExtra(Constants.KEY_GITHUB_USER);
