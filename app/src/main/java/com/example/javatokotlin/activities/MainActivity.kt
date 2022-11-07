@@ -45,12 +45,13 @@ class MainActivity : AppCompatActivity() {
     /** Save app username in SharedPreferences  */
     fun saveName(view: View?) {
         if (isNotEmpty(etName, inputLayoutName)) {
-            val personName = etName!!.text.toString()
-            val sp = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, MODE_PRIVATE)
-            val editor = sp.edit()
+            val personName = etName?.text.toString()
+            val preferences = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, MODE_PRIVATE)
+            val editor = preferences.edit()
             editor.putString(Constants.KEY_PERSON_NAME, personName)
             editor.apply()
         }
+
     }
 
     /** Search repositories on github  */
