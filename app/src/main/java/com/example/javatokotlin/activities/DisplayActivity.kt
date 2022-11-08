@@ -35,7 +35,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     // this variable will be instantiated only in the first call
     private val githubAPIService: GithubAPIService by lazy {
-        RetrofitClient.getGithubAPIService()
+        RetrofitClient.githubAPIService
     }
     private var realm: Realm? = null
     private lateinit var binding: ActivityDisplayBinding
