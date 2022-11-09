@@ -9,12 +9,12 @@ import retrofit2.http.QueryMap
 
 // public abstract by default
 interface GithubAPIService {
-    
-    // https://api.github.com/search/repositories?q=mario+language=java
-    @GET("search/repositories")
-    fun searchRepositories(@QueryMap options: Map<String?, String?>?): Call<SearchResponse?>?
 
-    // https://api.github.com/users/{ali-el-sayed}/repos
+    // https://api.github.com/search/repositories?q=nectar+language=java
+    @GET("search/repositories")
+    fun searchRepositories(@QueryMap options: Map<String, String>): Call<SearchResponse>
+
+    // https://api.github.com/users/ali-el-sayed/repos
     @GET("/users/{username}/repos")
-    fun searchRepositoriesByUser(@Path("username") githubUser: String?): Call<List<Repository?>?>?
+    fun searchRepositoriesByUser(@Path("username") githubUser: String): Call<List<Repository>>
 }

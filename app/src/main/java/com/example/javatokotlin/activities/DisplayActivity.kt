@@ -63,13 +63,13 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = layoutManager
 
-        Realm.init(this)
-        val config = RealmConfiguration.Builder()
-            .allowQueriesOnUiThread(true)
-            .allowWritesOnUiThread(true)
-            .build()
+//        Realm.init(this)
+//        val config = RealmConfiguration.Builder()
+//            .allowQueriesOnUiThread(true)
+//            .allowWritesOnUiThread(true)
+//            .build()
         //Realm Db
-        realm = Realm.getInstance(config)
+//        realm = Realm.getInstance(config)
 
         navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
@@ -143,10 +143,11 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             ) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "posts loaded from API $response")
+
+                    //browsedRepositories = response.body().items
                     response.body()?.items?.let {
                         browsedRepositories = it
                     }
-                    browsedRepositories = response.body()!!.items
                     if (browsedRepositories.isNotEmpty())
                         setupRecyclerView(browsedRepositories)
                     else Util.showMessage(
@@ -191,12 +192,12 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showBookmarks() {
-        realm!!.executeTransaction { realm ->
-            val repositories = realm.where(
-                Repository::class.java
-            ).findAll()
-            displayAdapter.swap(repositories)
-        }
+//        realm!!.executeTransaction { realm ->
+//            val repositories = realm.where(
+//                Repository::class.java
+//            ).findAll()
+//            displayAdapter.swap(repositories)
+//        }
     }
 
     private fun closeDrawer() {
@@ -206,7 +207,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
             super.onBackPressed()
-            realm!!.close()
+//            realm!!.close()
         }
     }
 

@@ -7,7 +7,6 @@ import android.os.Bundle
 //import kotlinx.android.extensions.*
 import android.content.Intent
 import android.view.View
-import com.example.javatokotlin.R
 import com.example.javatokotlin.app.Constants
 import com.example.javatokotlin.databinding.ActivityMainBinding
 
