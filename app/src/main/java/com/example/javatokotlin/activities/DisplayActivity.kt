@@ -1,5 +1,6 @@
 package com.example.javatokotlin.activities
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -20,6 +21,7 @@ import androidx.core.view.GravityCompat
 import com.example.javatokotlin.app.Constants
 import com.example.javatokotlin.app.Util
 import com.example.javatokotlin.databinding.ActivityDisplayBinding
+import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
 import io.realm.Realm
 import retrofit2.Call
@@ -31,15 +33,15 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var displayAdapter: DisplayAdapter
-    private var browsedRepositories: List<Repository> = mutableListOf()
+    private var realm: Realm? = null
+    private lateinit var binding: ActivityDisplayBinding
+    private lateinit var navigationView: NavigationView
 
+    private var browsedRepositories: List<Repository> = mutableListOf()
     // this variable will be instantiated only in the first call
     private val githubAPIService: GithubAPIService by lazy {
         RetrofitClient.githubAPIService
     }
-    private var realm: Realm? = null
-    private lateinit var binding: ActivityDisplayBinding
-    private lateinit var navigationView: NavigationView
 
     companion object {
         private val TAG = DisplayActivity::class.java.simpleName
