@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.content.Intent
 import android.view.View
 import com.example.javatokotlin.app.Constants
+import com.example.javatokotlin.extentions.isNotEmpty
 import com.example.javatokotlin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,9 +20,9 @@ class MainActivity : AppCompatActivity() {
     private var etRepoName: EditText? = null
     private var etLanguage: EditText? = null
     private var etGithubUser: EditText? = null
-    private var inputLayoutName: TextInputLayout? = null
-    private var inputLayoutRepoName: TextInputLayout? = null
-    private var inputLayoutGithubUser: TextInputLayout? = null
+    private lateinit var inputLayoutName: TextInputLayout
+    private lateinit var inputLayoutRepoName: TextInputLayout
+    private lateinit var inputLayoutGithubUser: TextInputLayout
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Save app username in SharedPreferences  */
     fun saveName(view: View?) {
-        if (isNotEmpty(etName, inputLayoutName)) {
+        if (etName?.isNotEmpty(inputLayoutName)!!) {
             val personName = etName?.text.toString()
             val preferences = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, MODE_PRIVATE)
             val editor = preferences.edit()
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Search repositories on github  */
     fun listRepositories(view: View?) {
-        if (isNotEmpty(etRepoName, inputLayoutRepoName)) {
+        if (etRepoName?.isNotEmpty(inputLayoutRepoName)!!) {
             val queryRepo = etRepoName?.text.toString()
             val repoLanguage = etLanguage?.text.toString()
 
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Search repositories of a particular github user  */
     fun listUserRepositories(view: View?) {
-        if (isNotEmpty(etGithubUser, inputLayoutGithubUser)) {
+        if (etGithubUser?.isNotEmpty(inputLayoutGithubUser)!!) {
             val githubUser = etGithubUser?.text.toString()
             val intent = Intent(this@MainActivity, DisplayActivity::class.java)
             intent.putExtra(Constants.KEY_QUERY_TYPE, Constants.SEARCH_BY_USER)
@@ -80,15 +81,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Validation  */
-    private fun isNotEmpty(editText: EditText?, textInputLayout: TextInputLayout?): Boolean {
-        return if (editText?.text.toString().isEmpty()) {
-            textInputLayout?.error = "Cannot be blank"
-            false
-        } else {
-            textInputLayout?.isErrorEnabled = false
-            true
-        }
-    }
+//    private fun isNotEmpty(editText: EditText?, textInputLayout: TextInputLayout?): Boolean {
+//        return if (editText?.text.toString().isEmpty()) {
+//            textInputLayout?.error = "Cannot be blank"
+//            false
+//        } else {
+//            textInputLayout?.isErrorEnabled = false
+//            true
+//        }
+//    }
 
 
 }

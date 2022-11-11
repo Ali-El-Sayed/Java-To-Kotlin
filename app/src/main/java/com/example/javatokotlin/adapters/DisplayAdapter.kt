@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.javatokotlin.app.Util
+import com.example.javatokotlin.app.toast
 import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
 
@@ -41,7 +41,8 @@ class DisplayAdapter(
 
     fun swap(dataList: List<Repository>) {
         if (dataList.isEmpty())
-            Util.showMessage(context, "No Items Found")
+            context.toast("No Items Found")
+        // Util.showMessage(context, "No Items Found")
         this.data = dataList
         notifyDataSetChanged()
     }

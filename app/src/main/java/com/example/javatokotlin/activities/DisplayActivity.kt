@@ -1,6 +1,5 @@
 package com.example.javatokotlin.activities
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -10,7 +9,6 @@ import com.example.javatokotlin.retrofit.GithubAPIService
 import android.os.Bundle
 import com.example.javatokotlin.R
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.realm.RealmConfiguration
 import com.example.javatokotlin.retrofit.RetrofitClient
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.util.Log
@@ -19,9 +17,9 @@ import android.widget.TextView
 import com.example.javatokotlin.models.SearchResponse
 import androidx.core.view.GravityCompat
 import com.example.javatokotlin.app.Constants
-import com.example.javatokotlin.app.Util
+import com.example.javatokotlin.app.showErrorMessage
+import com.example.javatokotlin.app.toast
 import com.example.javatokotlin.databinding.ActivityDisplayBinding
-import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
 import io.realm.Realm
 import retrofit2.Call
@@ -38,6 +36,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var navigationView: NavigationView
 
     private var browsedRepositories: List<Repository> = mutableListOf()
+
     // this variable will be instantiated only in the first call
     private val githubAPIService: GithubAPIService by lazy {
         RetrofitClient.githubAPIService
@@ -122,13 +121,14 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
                         if (browsedRepositories.isNotEmpty())
                             setupRecyclerView(browsedRepositories)
-                    } else
-                        Util.showMessage(this@DisplayActivity, "No Item Found")
+                    } else toast("No Item Found")
+                    //Util.showMessage(this@DisplayActivity, "No Item Found")
 
                 }
 
                 override fun onFailure(call: Call<List<Repository>>, error: Throwable) {
-                    Util.showMessage(this@DisplayActivity, error.message)
+                    toast(error.message ?: "Error Fetching Data")
+                    //Util.showMessage(this@DisplayActivity, error.message ?: "Error Fetching Data")
                 }
             })
     }
@@ -152,18 +152,17 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     }
                     if (browsedRepositories.isNotEmpty())
                         setupRecyclerView(browsedRepositories)
-                    else Util.showMessage(
-                        this@DisplayActivity,
-                        "No Items Found"
-                    )
+                    else toast("No Items Found")
+                    //Util.showMessage(this@DisplayActivity, "No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
-                    Util.showErrorMessage(this@DisplayActivity, response.errorBody())
+                    showErrorMessage(response.errorBody()!!)
                 }
             }
 
-            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                Util.showMessage(this@DisplayActivity, t.toString())
+            override fun onFailure(call: Call<SearchResponse>, error: Throwable) {
+                toast(error.toString())
+                // Util.showMessage(this@DisplayActivity, error.toString())
             }
         })
     }
