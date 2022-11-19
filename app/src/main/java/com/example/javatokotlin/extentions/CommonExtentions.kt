@@ -1,4 +1,4 @@
-package com.example.javatokotlin.app
+package com.example.javatokotlin.extentions
 
 import android.content.Context
 import android.util.Log

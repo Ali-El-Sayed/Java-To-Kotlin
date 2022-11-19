@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.javatokotlin.app.toast
+import com.example.javatokotlin.extentions.toast
 import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
 

@@ -17,8 +17,8 @@ import android.widget.TextView
 import com.example.javatokotlin.models.SearchResponse
 import androidx.core.view.GravityCompat
 import com.example.javatokotlin.app.Constants
-import com.example.javatokotlin.app.showErrorMessage
-import com.example.javatokotlin.app.toast
+import com.example.javatokotlin.extentions.showErrorMessage
+import com.example.javatokotlin.extentions.toast
 import com.example.javatokotlin.databinding.ActivityDisplayBinding
 import com.example.javatokotlin.models.Repository
 import io.realm.Realm
@@ -113,17 +113,23 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     call: Call<List<Repository>>,
                     response: Response<List<Repository>>
                 ) {
-                    if (response.isSuccessful) {
-                        Log.d(TAG, "posts loaded from API: $response")
+                    handleResponse({
                         response.body()?.let {
-                            browsedRepositories = it // it == response.body()
+                            browsedRepositories = it
                         }
-
-                        if (browsedRepositories.isNotEmpty())
-                            setupRecyclerView(browsedRepositories)
-                    } else toast("No Item Found")
-                    //Util.showMessage(this@DisplayActivity, "No Item Found")
-
+                    }, response)
+                    /*                  if (response.isSuccessful) {
+    //                        Log.d(TAG, "posts loaded from API: $response")
+    //                        response.body()?.let {
+    //                            browsedRepositories = it // it == response.body()
+    //                        }
+    //                        if (browsedRepositories.isNotEmpty())
+    //                            setupRecyclerView(browsedRepositories)
+    //                        else toast("No Item Found")
+    //                    } else {
+    //                        Log.i(TAG, "error $response")
+    //                        showErrorMessage(response.errorBody()!!)
+                       }*/
                 }
 
                 override fun onFailure(call: Call<List<Repository>>, error: Throwable) {
@@ -143,28 +149,45 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
             ) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "posts loaded from API $response")
-
-                    //browsedRepositories = response.body().items
+                handleResponse({
                     response.body()?.items?.let {
                         browsedRepositories = it
                     }
-                    if (browsedRepositories.isNotEmpty())
-                        setupRecyclerView(browsedRepositories)
-                    else toast("No Items Found")
-                    //Util.showMessage(this@DisplayActivity, "No Items Found")
-                } else {
-                    Log.i(TAG, "error $response")
-                    showErrorMessage(response.errorBody()!!)
-                }
+                }, response)
+                /*               if (response.isSuccessful) {
+//                    Log.i(TAG, "posts loaded from API $response")
+//                    response.body()?.items?.let {
+//                        browsedRepositories = it
+//                    }
+//                    if (browsedRepositories.isNotEmpty())
+//                        setupRecyclerView(browsedRepositories)
+//                    else toast("No Items Found")
+//                } else {
+//                    Log.i(TAG, "error $response")
+//                    showErrorMessage(response.errorBody()!!)
+                }*/
             }
 
             override fun onFailure(call: Call<SearchResponse>, error: Throwable) {
                 toast(error.toString())
-                // Util.showMessage(this@DisplayActivity, error.toString())
             }
         })
+    }
+
+    private fun <T : Any> handleResponse(
+        setBrowsedRepositories: () -> Unit,
+        response: Response<T>
+    ) {
+        if (response.isSuccessful) {
+            Log.d(TAG, "posts loaded from API: $response")
+            setBrowsedRepositories()
+            if (browsedRepositories.isNotEmpty())
+                setupRecyclerView(browsedRepositories)
+            else toast("No Item Found")
+        } else {
+            Log.i(TAG, "error $response")
+            showErrorMessage(response.errorBody()!!)
+        }
     }
 
     private fun setupRecyclerView(items: List<Repository>) {
@@ -177,15 +200,25 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         closeDrawer()
         when (menuItem.itemId) {
             R.id.item_bookmark -> {
-                showBookmarks()
-                supportActionBar!!.title = "Showing Bookmarks"
+                consumeMenuEvent({ showBookmarks() }, "Showing Bookmarks")
             }
             R.id.item_browsed_results -> {
-                showBrowsedResults()
-                supportActionBar!!.title = "Showing Browsed Results"
+                consumeMenuEvent({ showBrowsedResults() }, "Showing Browsed Results")
             }
+
         }
         return true
+    }
+
+    /* This type corresponds to the void type in Java.
+    // HOF Disadvantages
+    // The passed functions are stored as objects
+    // Inline Functions Disadvantages
+    // Too Much of its Usage Increases Byte code(for short functions)
+    */
+    private inline fun consumeMenuEvent(myFun: () -> Unit, msg: String) {
+        myFun()
+        supportActionBar!!.title = msg
     }
 
     private fun showBrowsedResults() {
