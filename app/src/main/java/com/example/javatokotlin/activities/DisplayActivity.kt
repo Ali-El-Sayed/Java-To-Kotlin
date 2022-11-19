@@ -22,6 +22,7 @@ import com.example.javatokotlin.extentions.toast
 import com.example.javatokotlin.databinding.ActivityDisplayBinding
 import com.example.javatokotlin.models.Repository
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,13 +65,13 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = layoutManager
 
-//        Realm.init(this)
-//        val config = RealmConfiguration.Builder()
-//            .allowQueriesOnUiThread(true)
-//            .allowWritesOnUiThread(true)
-//            .build()
-        //Realm Db
-//        realm = Realm.getInstance(config)
+        Realm.init(this)
+        val config = RealmConfiguration.Builder()
+            .allowQueriesOnUiThread(true)
+            .allowWritesOnUiThread(true)
+            .build()
+//        Realm Db
+        realm = Realm.getInstance(config)
 
         navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
@@ -90,7 +91,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         if (intent.getIntExtra(Constants.KEY_QUERY_TYPE, -1) == Constants.SEARCH_BY_REPO) {
             val queryRepo = intent.getStringExtra(Constants.KEY_REPO_SEARCH) ?: ""
             val repoLanguage = intent.getStringExtra(Constants.KEY_LANGUAGE) ?: ""
-            Log.d("DATAAPICALL", "onCreate: $queryRepo$repoLanguage")
+            Log.d(TAG, "onCreate: $queryRepo$repoLanguage")
             fetchRepositories(queryRepo, repoLanguage)
         } else {
             val githubUser = intent.getStringExtra(Constants.KEY_GITHUB_USER) ?: ""
@@ -118,23 +119,10 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                             browsedRepositories = it
                         }
                     }, response)
-                    /*                  if (response.isSuccessful) {
-    //                        Log.d(TAG, "posts loaded from API: $response")
-    //                        response.body()?.let {
-    //                            browsedRepositories = it // it == response.body()
-    //                        }
-    //                        if (browsedRepositories.isNotEmpty())
-    //                            setupRecyclerView(browsedRepositories)
-    //                        else toast("No Item Found")
-    //                    } else {
-    //                        Log.i(TAG, "error $response")
-    //                        showErrorMessage(response.errorBody()!!)
-                       }*/
                 }
 
                 override fun onFailure(call: Call<List<Repository>>, error: Throwable) {
                     toast(error.message ?: "Error Fetching Data")
-                    //Util.showMessage(this@DisplayActivity, error.message ?: "Error Fetching Data")
                 }
             })
     }
@@ -154,18 +142,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         browsedRepositories = it
                     }
                 }, response)
-                /*               if (response.isSuccessful) {
-//                    Log.i(TAG, "posts loaded from API $response")
-//                    response.body()?.items?.let {
-//                        browsedRepositories = it
-//                    }
-//                    if (browsedRepositories.isNotEmpty())
-//                        setupRecyclerView(browsedRepositories)
-//                    else toast("No Items Found")
-//                } else {
-//                    Log.i(TAG, "error $response")
-//                    showErrorMessage(response.errorBody()!!)
-                }*/
             }
 
             override fun onFailure(call: Call<SearchResponse>, error: Throwable) {
@@ -226,12 +202,12 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showBookmarks() {
-//        realm!!.executeTransaction { realm ->
-//            val repositories = realm.where(
-//                Repository::class.java
-//            ).findAll()
-//            displayAdapter.swap(repositories)
-//        }
+        realm!!.executeTransaction { realm ->
+            val repositories = realm.where(
+                Repository::class.java
+            ).findAll()
+            displayAdapter.swap(repositories)
+        }
     }
 
     private fun closeDrawer() {

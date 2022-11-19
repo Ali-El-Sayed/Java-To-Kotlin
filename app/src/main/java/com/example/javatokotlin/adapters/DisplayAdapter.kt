@@ -3,13 +3,17 @@ package com.example.javatokotlin.adapters
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.UiThread
 import com.example.javatokotlin.extentions.toast
 import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
+import io.realm.Realm
+import io.realm.RealmConfiguration
 
 class DisplayAdapter(
     private var context: Context,
@@ -42,7 +46,6 @@ class DisplayAdapter(
     fun swap(dataList: List<Repository>) {
         if (dataList.isEmpty())
             context.toast("No Items Found")
-        // Util.showMessage(context, "No Items Found")
         this.data = dataList
         notifyDataSetChanged()
     }
@@ -80,25 +83,21 @@ class DisplayAdapter(
         }
 
         private fun bookmarkRepository(current: Repository?) {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                .allowQueriesOnUiThread(true)
+                .allowWritesOnUiThread(true)
+                .build()
 
-//			Realm realm = Realm.getDefaultInstance();
-//			realm.executeTransactionAsync(new Realm.Transaction() {
-//				@Override
-//				public void execute(@NonNull Realm realm) {
-//					realm.copyToRealmOrUpdate(current);
-//				}
-//			}, new Realm.Transaction.OnSuccess() {
-//				@Override
-//				public void onSuccess() {
-//					Util.showMessage(mContext, "Bookmarked Successfully");
-//				}
-//			}, new Realm.Transaction.OnError() {
-//				@Override
-//				public void onError(Throwable error) {
-//					Log.i(TAG, error.toString());
-//					Util.showMessage(mContext, "Error Occurred");
-//				}
-//			});
+            current?.let {
+                val realm = Realm.getInstance(config)
+                realm.executeTransaction {
+                    realm.insertOrUpdate(current)
+                    context.toast("Bookmarked Successfully")
+                }
+            }
+
         }
+
     }
 }
