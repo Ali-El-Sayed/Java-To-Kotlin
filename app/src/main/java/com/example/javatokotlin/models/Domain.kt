@@ -25,7 +25,8 @@ open class Repository constructor(
 
 open class Owner constructor(
     var id: Int = 0,
-    var login: String? = null
+    var login: String? = null,
+    var avatar_url: String? = null
 ) : RealmObject()
 
 //public final by default

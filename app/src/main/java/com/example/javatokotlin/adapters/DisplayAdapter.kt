@@ -3,15 +3,14 @@ package com.example.javatokotlin.adapters
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.UiThread
 import com.example.javatokotlin.extentions.toast
 import com.example.javatokotlin.databinding.ListItemBinding
 import com.example.javatokotlin.models.Repository
+import com.squareup.picasso.Picasso
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -76,8 +75,9 @@ class DisplayAdapter(
             binding.txvName.text = current.name
             binding.txvLanguage.text = current.language
             binding.txvForks.text = current.forks.toString()
-            binding.txvWatchers.text = current.watchers.toString()
-            binding.txvStars.text = current.stars.toString()
+            binding.txvWatchers.text = "👁 ${current.watchers.toString()}"
+            binding.txvStars.text = "⭐ ${current.stars.toString()}"
+            Picasso.get().load(current.owner?.avatar_url).into(binding.imgProfile)
             this.pos = position
             this.current = current
         }
